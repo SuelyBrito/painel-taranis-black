@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Executivo | Taranis Black</title>
+<style>
+:root{--bg:#f3f5f8;--panel:#fff;--ink:#172033;--muted:#667085;--line:#e6eaf0;--navy:#14243b;--blue:#3268a8;--teal:#16877d;--red:#c94b54;--amber:#b7791f;--green:#25845b;--shadow:0 8px 24px rgba(20,36,59,.07)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:14px/1.45 Inter,Segoe UI,Arial,sans-serif;color:var(--ink)}
+header{background:linear-gradient(115deg,#14243b,#203d5c);color:white;padding:26px max(22px,calc((100% - 1400px)/2));}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+.brand{font-size:12px;letter-spacing:1.8px;text-transform:uppercase;color:#b8c9dc;font-weight:700}
+h1{font-size:27px;margin:7px 0 4px;letter-spacing:-.5px}.sub{color:#c8d5e4;margin:0}
+.header-right{font-size:12px;color:#c8d5e4;text-align:right}
+nav{display:flex;gap:8px;margin-top:22px;flex-wrap:wrap}
+nav button{border:1px solid #58708b;background:transparent;color:#dbe6f2;padding:9px 15px;border-radius:8px;cursor:pointer;font-weight:600}
+nav button.active,nav button:hover{background:#fff;color:#14243b;border-color:white}
+main{max-width:1400px;margin:22px auto;padding:0 22px 40px}
+.section{display:none}.section.active{display:block}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:15px;margin:18px 0 14px;flex-wrap:wrap}
+h2{font-size:19px;margin:0 0 4px} .hint{color:var(--muted);font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.card,.panel{background:var(--panel);border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow)}
+.kpi{padding:17px 18px;min-height:116px}.kpi .label{color:var(--muted);font-size:12px;font-weight:650}
+.kpi .value{font-size:26px;font-weight:750;letter-spacing:-.6px;margin:8px 0 4px}
+.kpi .detail{font-size:11px;color:var(--muted)}
+.negative{color:var(--red)}.positive{color:var(--green)}.neutral{color:var(--blue)}
+.layout2{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin-top:14px}
+.panel{padding:18px;min-width:0}.panel h3{font-size:14px;margin:0 0 3px}.panel .desc{font-size:11px;color:var(--muted);margin-bottom:13px}
+.chart{width:100%;overflow:hidden}.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:15px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:9px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px}
+.callout{border-left:4px solid var(--amber);background:#fff8e8;padding:13px 15px;border-radius:8px;color:#664b1d;font-size:12px;margin-top:14px}
+.callout strong{color:#50380e}
+.tablewrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:12px;min-width:650px}
+th{text-align:left;color:#657184;background:#f7f9fb;font-weight:700}
+th,td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.tag{display:inline-block;border-radius:20px;padding:4px 8px;font-size:10px;font-weight:700;background:#fff0ed;color:#a43d37}
+.tag.blue{background:#edf4fc;color:#285c91}.tag.green{background:#eaf6ef;color:#26734e}
+.barline{display:flex;align-items:center;gap:8px;margin:12px 0;font-size:11px}
+.barlabel{width:120px;color:#536174}.bartrack{height:10px;background:#edf0f4;border-radius:9px;flex:1;overflow:hidden}.barfill{height:100%;border-radius:9px;background:#3268a8}.barvalue{width:80px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+.sliderbox{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin:12px 0 18px}
+input[type=range]{width:100%;accent-color:#16877d}
+.slider-value{font-size:22px;font-weight:750;color:var(--teal);min-width:54px;text-align:right}
+.recovery{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.recovery .mini{background:#f7f9fb;border:1px solid var(--line);border-radius:9px;padding:13px}
+.mini .mlabel{font-size:10px;color:var(--muted);font-weight:700}.mini .mval{font-size:19px;font-weight:750;margin-top:5px}
+.note{font-size:11px;color:var(--muted);line-height:1.55;margin-top:12px}
+.footer{border-top:1px solid var(--line);margin-top:20px;padding-top:13px;color:var(--muted);font-size:10px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.pill{border:1px solid var(--line);border-radius:8px;padding:8px 10px;color:var(--muted);font-size:11px}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.layout2,.two-col{grid-template-columns:1fr}}
+@media(max-width:560px){header{padding:22px 16px}main{padding:0 13px 30px}.grid{grid-template-columns:1fr 1fr;gap:9px}.kpi{padding:13px;min-height:105px}.kpi .value{font-size:20px}h1{font-size:22px}.recovery{grid-template-columns:1fr}.header-right{text-align:left}}
+@media print{body{background:white}nav{display:none}.section{display:block!important;page-break-after:always}.card,.panel{box-shadow:none;break-inside:avoid}header{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<header>
+ <div class="topline">
+  <div><div class="brand">Taranis Black · Inteligência Executiva</div><h1>Saúde financeira & eficiência operacional</h1><p class="sub">Painel de diagnóstico, causas de perdas e potencial de recuperação</p></div>
+  <div class="header-right">BASE: PLANILHA FINANCEIRA ENVIADA<br>VISÃO ANUAL · ORÇADO × REALIZADO</div>
+ </div>
+ <nav>
+  <button class="active" data-tab="exec">Visão executiva</button>
+  <button data-tab="fin">Desempenho financeiro</button>
+  <button data-tab="ops">Gargalos operacionais</button>
+  <button data-tab="rec">Potencial de recuperação</button>
+ </nav>
+</header>
+<main>
+<section id="exec" class="section active">
+ <div class="section-head"><div><h2>Resumo para a diretoria</h2><div class="hint">As três perguntas que orientam a decisão executiva</div></div><span class="pill">Valores em R$ · base anual</span></div>
+ <div class="grid" id="exec-kpis"></div>
+ <div class="layout2">
+  <div class="panel"><h3>Receita bruta: orçamento × realizado</h3><div class="desc">A receita ficou próxima do orçamento, mas isso não se converteu em resultado operacional.</div><div class="chart" id="revenue-chart"></div><div class="legend"><span><i class="dot" style="background:#aab8c8"></i>Orçado</span><span><i class="dot" style="background:#3268a8"></i>Realizado</span></div></div>
+  <div class="panel"><h3>Resultado: onde a margem foi pressionada</h3><div class="desc">Comparação dos principais resultados anuais.</div><div id="result-bars"></div></div>
+ </div>
+ <div class="callout"><strong>Leitura executiva:</strong> a receita bruta realizada foi de R$ 48,50 mi, praticamente em linha com o orçamento (-0,2%). Mesmo assim, o EBITDA ficou R$ 4,08 mi abaixo do previsto (-41,4%). O painel aponta logística, devoluções, reentregas e crédito/cobrança como áreas prioritárias para investigação.</div>
+ <div class="footer">Importante: o impacto anual estimado dos gargalos é uma classificação operacional informada na planilha. Não deve ser somado automaticamente às despesas da DRE, pois pode haver sobreposição.</div>
+</section>
+
+<section id="fin" class="section">
+ <div class="section-head"><div><h2>Desempenho financeiro</h2><div class="hint">Desvios entre orçamento e realizado; foco em rentabilidade e custos relacionados à operação.</div></div></div>
+ <div class="grid" id="fin-kpis"></div>
+ <div class="layout2">
+  <div class="panel"><h3>Desvios por conta relevante</h3><div class="desc">Variação em R$ entre realizado e orçado. Em despesas, valor negativo indica gasto acima do orçamento.</div><div class="tablewrap"><table id="finance-table"></table></div></div>
+  <div class="panel"><h3>Receita por linha de produto</h3><div class="desc">Realizado anual versus orçamento, com margem bruta média informada.</div><div id="product-bars"></div><div class="tablewrap"><table id="product-table"></table></div></div>
+ </div>
+ <div class="panel" style="margin-top:14px"><h3>Receita bruta por trimestre</h3><div class="desc">O desempenho enfraquece no segundo semestre, especialmente no T3 e T4.</div><div id="quarter-chart" class="chart"></div><div class="legend"><span><i class="dot" style="background:#aab8c8"></i>Orçado</span><span><i class="dot" style="background:#3268a8"></i>Realizado</span></div></div>
+ <div class="callout"><strong>Conciliação necessária:</strong> a aba de produtos totaliza R$ 47,40 mi realizados, enquanto a DRE registra R$ 48,50 mi de receita bruta — diferença de R$ 1,10 mi. O orçamento por produto soma R$ 48,00 mi, contra R$ 48,60 mi na DRE — diferença de R$ 600 mil. Validar escopo, período e critérios antes de integrar as duas visões.</div>
+</section>
+
+<section id="ops" class="section">
+ <div class="section-head"><div><h2>Gargalos operacionais e impacto financeiro</h2><div class="hint">O que está fora da meta, qual a causa indicada e qual impacto anual estimado.</div></div><span class="pill">Impacto informado: R$ 3,89 mi/ano</span></div>
+ <div class="grid" id="ops-kpis"></div>
+ <div class="layout2">
+  <div class="panel"><h3>Impacto anual estimado por gargalo</h3><div class="desc">Valores transcritos da aba “Gargalos_Operacionais_Custos”.</div><div id="impact-bars"></div></div>
+  <div class="panel"><h3>Indicadores operacionais críticos</h3><div class="desc">Situação atual comparada à meta ou benchmark.</div><div class="tablewrap"><table id="ops-table"></table></div></div>
+ </div>
+ <div class="panel" style="margin-top:14px"><h3>Causas-raiz e áreas de atuação</h3><div class="tablewrap"><table id="causes-table"></table></div></div>
+ <div class="callout"><strong>Alerta de controladoria:</strong> os R$ 3,89 mi representam impactos anuais estimados na aba operacional. Parte desses impactos pode estar refletida em fretes, devoluções, reentregas, provisão para devedores duvidosos ou despesas administrativas da DRE. Tratar como “mapa de exposição” até conciliar cada ocorrência com lançamento contábil, pedido e documento de origem.</div>
+</section>
+
+<section id="rec" class="section">
+ <div class="section-head"><div><h2>Potencial de recuperação</h2><div class="hint">Simulação de cenários — não é economia realizada nem previsão garantida.</div></div><span class="pill">Premissa editável</span></div>
+ <div class="layout2">
+  <div class="panel">
+   <h3>Simule a redução dos impactos elegíveis</h3>
+   <div class="desc">Ajuste o percentual de redução que a iniciativa de melhoria poderia capturar do impacto operacional estimado.</div>
+   <div class="sliderbox"><div><label for="recovery-rate"><strong>Percentual de recuperação hipotético</strong></label><input id="recovery-rate" type="range" min="0" max="100" step="5" value="30"></div><div class="slider-value" id="rate-label">30%</div></div>
+   <div class="recovery">
+    <div class="mini"><div class="mlabel">BASE DE IMPACTOS ESTIMADOS</div><div class="mval" id="base-impact">R$ 3,89 mi</div></div>
+    <div class="mini"><div class="mlabel">RECUPERAÇÃO POTENCIAL</div><div class="mval positive" id="potential">R$ 1,17 mi</div></div>
+    <div class="mini"><div class="mlabel">IMPACTO REMANESCENTE</div><div class="mval" id="remaining">R$ 2,72 mi</div></div>
+   </div>
+   <div class="note">Fórmula: impacto elegível × percentual hipotético de redução. O cálculo assume, apenas para simulação, que 100% dos impactos listados são elegíveis e independentes. Essa premissa deve ser substituída após conciliação de sobreposições e validação de causalidade.</div>
+  </div>
+  <div class="panel">
+   <h3>O que precisa ser medido para comprovar recuperação</h3>
+   <div class="desc">A planilha atual não contém dados transacionais por pedido para medir o ciclo ponta a ponta.</div>
+   <div class="barline"><div class="barlabel">Pedido até expedição</div><div class="bartrack"><div class="barfill" style="width:100%;background:#c94b54"></div></div><div class="barvalue">A coletar</div></div>
+   <div class="barline"><div class="barlabel">Crédito B2B</div><div class="bartrack"><div class="barfill" style="width:100%;background:#b7791f"></div></div><div class="barvalue">48h atual</div></div>
+   <div class="barline"><div class="barlabel">Meta do projeto</div><div class="bartrack"><div class="barfill" style="width:50%;background:#16877d"></div></div><div class="barvalue">&lt;24h úteis</div></div>
+   <div class="note">Para calcular o SLA real, será necessária uma tabela de pedidos com data/hora de assinatura, entrada, aprovação de crédito, faturamento e expedição, além de calendário de dias e horários úteis.</div>
+  </div>
+ </div>
+ <div class="panel" style="margin-top:14px"><h3>Dados adicionais necessários para transformar potencial em resultado comprovado</h3>
+  <div class="tablewrap"><table><thead><tr><th>Campo / evidência</th><th>Por que é necessário</th><th>Indicador que habilita</th></tr></thead><tbody>
+   <tr><td>ID único do pedido e cliente</td><td>Rastrear cada pedido sem duplicidade e associar impactos.</td><td>Volume, conversão, cancelamento e valor em risco.</td></tr>
+   <tr><td>Data/hora de cada etapa</td><td>Medir duração real e identificar filas/esperas.</td><td>Tempo de ciclo, tempo por etapa e % dentro de 24h úteis.</td></tr>
+   <tr><td>Motivo de atraso, cancelamento ou retrabalho</td><td>Vincular a ocorrência ao gargalo causador.</td><td>Perdas por causa e prioridade de automação.</td></tr>
+   <tr><td>Custo comprovado por ocorrência</td><td>Evitar dupla contagem e separar custo contábil de oportunidade.</td><td>Perda validada e economia efetivamente realizada.</td></tr>
+   <tr><td>Valor recuperado após melhoria</td><td>Comparar período-base e pós-implantação.</td><td>ROI, payback e benefício realizado.</td></tr>
+  </tbody></table></div>
+ </div>
+ <div class="callout"><strong>Conclusão:</strong> o projeto pode ser acompanhado por três níveis distintos: (1) impacto identificado na planilha; (2) potencial recuperável, calculado por cenário; (3) recuperação realizada, comprovada por pedidos, custos e comparação antes/depois. Não apresentar o nível 2 como economia já obtida.</div>
+</section>
+</main>
+<script>
+const D = {"dre": [{"name": "Receita Canal B2B Corporativo", "budget": 34000000, "actual": 33600000, "type": "revenue"}, {"name": "Receita Canal D2C / E-commerce", "budget": 14600000, "actual": 14900000, "type": "revenue"}, {"name": "Total Receita Bruta", "budget": 48600000, "actual": 48500000, "type": "total"}, {"name": "Impostos incidentes", "budget": -8262000, "actual": -8245000, "type": "cost"}, {"name": "Cancelamentos e devoluções por atraso logístico", "budget": -560000, "actual": -1235000, "type": "risk"}, {"name": "Receita Líquida Operacional", "budget": 39778000, "actual": 39020000, "type": "total"}, {"name": "Matéria-prima, mesh e componentes de alumínio", "budget": -16300000, "actual": -16700000, "type": "cost"}, {"name": "Mão de obra fabril e montagem direta", "budget": -3780000, "actual": -3890000, "type": "cost"}, {"name": "Lucro Bruto Operacional", "budget": 19698000, "actual": 18430000, "type": "total"}, {"name": "Despesas comerciais e vendas", "budget": -3060000, "actual": -3065000, "type": "cost"}, {"name": "Fretes e logística de entrega CD", "budget": -2380000, "actual": -3740000, "type": "risk"}, {"name": "Reentregas e multas por divergência de pedido", "budget": -210000, "actual": -725000, "type": "risk"}, {"name": "Despesas administrativas e sistemas legados", "budget": -1760000, "actual": -2020000, "type": "cost"}, {"name": "Provisão para devedores duvidosos (inadimplência B2B)", "budget": -440000, "actual": -1110000, "type": "risk"}, {"name": "Marketing institucional e geração de demanda", "budget": -2000000, "actual": -2000000, "type": "cost"}, {"name": "EBITDA", "budget": 9848000, "actual": 5770000, "type": "total"}, {"name": "Despesas financeiras líquidas e juros", "budget": -810000, "actual": -1060000, "type": "cost"}, {"name": "IRPJ e CSLL provisionados", "budget": -3072920, "actual": -1601400, "type": "cost"}, {"name": "Lucro líquido do exercício", "budget": 5965080, "actual": 3108600, "type": "total"}], "products": [{"name": "ErgoPro", "share": 48.5, "budget": 23500000, "actual": 23850000, "margin": 44.2, "bottleneck": "Fretes de emergência e devoluções comprimem a margem"}, {"name": "SmartDesk", "share": 27.5, "budget": 13200000, "actual": 12650000, "margin": 38.5, "bottleneck": "Homologação de crédito retém pedidos B2B por até 48 horas"}, {"name": "Silence", "share": 18.0, "budget": 8600000, "actual": 8100000, "margin": 52.0, "bottleneck": "Ciclo comercial longo e logística com montagem técnica"}, {"name": "Acessórios e periféricos", "share": 6.0, "budget": 2700000, "actual": 2800000, "margin": 61.0, "bottleneck": "Conciliação manual de boletos sobrecarrega a operação"}], "bottlenecks": [{"name": "Fechamento contábil mensal", "target": "2 dias úteis", "actual": "7 dias úteis", "gap": "+5 dias", "impact": 180000, "cause": "Conciliação manual de três planilhas Excel com ERP legado desconectado", "area": "Financeiro"}, {"name": "Homologação de crédito B2B", "target": "Até 4 horas", "actual": "48 horas", "gap": "+44 horas", "impact": 1250000, "cause": "Consulta Serasa manual (40 min/pedido) e dependência de aprovação por e-mail", "area": "Crédito"}, {"name": "Reentregas e fretes expressos", "target": "0,8% do faturamento", "actual": "2,8% do faturamento", "gap": "+2,0 p.p.", "impact": 960000, "cause": "Transposição manual de dados da proposta para a ordem de expedição", "area": "Logística"}, {"name": "Divergência em boletos / NF-e", "target": "Menos de 0,5% das NF-e", "actual": "6,8% das NF-e", "gap": "+6,3 p.p.", "impact": 390000, "cause": "Tabela comercial divergente do cadastro desatualizado no ERP", "area": "Faturamento"}, {"name": "Inadimplência B2B acima de 90 dias", "target": "1,2% da receita", "actual": "3,4% da receita", "gap": "+2,2 p.p.", "impact": 1110000, "cause": "Régua de cobrança não automatizada; lembretes manuais por e-mail", "area": "Crédito/Cobrança"}], "quarterly": [{"q": "T1", "revB": 10700000, "revA": 10850000, "ebitdaB": null, "ebitdaA": null, "returnsB": 120000, "returnsA": 195000}, {"q": "T2", "revB": 11400000, "revA": 11750000, "ebitdaB": null, "ebitdaA": null, "returnsB": 130000, "returnsA": 240000}, {"q": "T3", "revB": 12700000, "revA": 12500000, "ebitdaB": null, "ebitdaA": null, "returnsB": 150000, "returnsA": 380000}, {"q": "T4", "revB": 13800000, "revA": 13400000, "ebitdaB": null, "ebitdaA": null, "returnsB": 160000, "returnsA": 420000}]};
+const money = v => new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(v);
+const mi = v => 'R$ '+(v/1e6).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+' mi';
+const pct = v => (v*100).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';
+const el = id => document.getElementById(id);
+function kpi(label,value,detail,cls='neutral'){return `<div class="card kpi"><div class="label">${label}</div><div class="value ${cls}">${value}</div><div class="detail">${detail}</div></div>`}
+function setKpis(id,items){el(id).innerHTML=items.join('')}
+function bar(label,value,max,color='#3268a8',suffix=''){return `<div class="barline"><div class="barlabel">${label}</div><div class="bartrack"><div class="barfill" style="width:${Math.max(1,value/max*100)}%;background:${color}"></div></div><div class="barvalue">${suffix||money(value)}</div></div>`}
+function svgBars(rows, maxVal, formatter=money){
+ let w=640,h=220,left=42,right=10,top=10,bottom=34,plot=h-top-bottom,barW=28,gap=26;
+ let out=`<svg viewBox="0 0 ${w} ${h}" role="img">`;
+ [0,.25,.5,.75,1].forEach(t=>{let y=top+plot*(1-t);out+=`<line x1="${left}" y1="${y}" x2="${w-right}" y2="${y}" stroke="#e8edf2"/><text x="${left-7}" y="${y+4}" text-anchor="end" font-size="10" fill="#7b8796">${formatter(maxVal*t)}</text>`});
+ rows.forEach((r,i)=>{let x=left+28+i*(barW*2+gap),bh=r.v/maxVal*plot;out+=`<rect x="${x}" y="${top+plot-bh}" width="${barW}" height="${bh}" rx="4" fill="#aab8c8"/><text x="${x+barW/2}" y="${h-13}" text-anchor="middle" font-size="10" fill="#596779">${r.label}</text>`;let bh2=r.a/maxVal*plot;out+=`<rect x="${x+barW+5}" y="${top+plot-bh2}" width="${barW}" height="${bh2}" rx="4" fill="#3268a8"/>`});
+ out+='</svg>';return out;
+}
+const revB=48.6e6, revA=48.5e6, ebitdaB=9.848e6, ebitdaA=5.77e6, netB=5.96508e6, netA=3.1086e6, grossB=19.698e6,grossA=18.43e6;
+const impact=D.bottlenecks.reduce((s,x)=>s+x.impact,0);
+setKpis('exec-kpis',[
+ kpi('Receita bruta realizada',mi(revA),'Orçado: R$ 48,60 mi · desvio de -0,2%','neutral'),
+ kpi('EBITDA realizado',mi(ebitdaA),'R$ 4,08 mi abaixo do orçamento · -41,4%','negative'),
+ kpi('Impactos operacionais estimados',mi(impact),'Soma dos cinco impactos informados','negative'),
+ kpi('Meta estratégica do ciclo','< 24h úteis','Assinatura até expedição · dado transacional ainda não disponível','neutral')
+]);
+el('revenue-chart').innerHTML=svgBars([{label:'Receita',v:revB,a:revA}],55e6,v=>'R$ '+(v/1e6).toFixed(0)+' mi');
+el('result-bars').innerHTML=[
+ ['Lucro bruto',grossB,grossA],['EBITDA',ebitdaB,ebitdaA],['Lucro líquido',netB,netA]
+].map(([n,b,a])=>`<div style="margin:14px 0"><div style="font-size:11px;font-weight:700;margin-bottom:6px">${n}</div><div class="barline"><div class="barlabel">Orçado</div><div class="bartrack"><div class="barfill" style="width:${b/20e6*100}% ;background:#aab8c8"></div></div><div class="barvalue">${mi(b)}</div></div><div class="barline"><div class="barlabel">Realizado</div><div class="bartrack"><div class="barfill" style="width:${a/20e6*100}%"></div></div><div class="barvalue">${mi(a)}</div></div></div>`).join('');
+setKpis('fin-kpis',[
+ kpi('Lucro bruto',mi(grossA),'Orçado: R$ 19,70 mi · queda de 6,4%','negative'),
+ kpi('Margem EBITDA',pct(ebitdaA/revA),'Orçado: '+pct(ebitdaB/revB),'negative'),
+ kpi('Fretes e logística',mi(3.74e6),'Orçado: R$ 2,38 mi · +R$ 1,36 mi','negative'),
+ kpi('Devoluções por atraso',mi(1.235e6),'Orçado: R$ 560 mil · +R$ 675 mil','negative')
+]);
+const financeRows=D.dre.filter(x=>['Cancelamentos e devoluções por atraso logístico','Fretes e logística de entrega CD','Reentregas e multas por divergência de pedido','Provisão para devedores duvidosos (inadimplência B2B)','EBITDA','Lucro líquido do exercício'].includes(x.name));
+el('finance-table').innerHTML='<thead><tr><th>Conta</th><th class="num">Orçado</th><th class="num">Realizado</th><th class="num">Desvio</th></tr></thead><tbody>'+financeRows.map(x=>{let d=x.actual-x.budget;return `<tr><td>${x.name}</td><td class="num">${money(x.budget)}</td><td class="num">${money(x.actual)}</td><td class="num ${d<0?'negative':'positive'}">${money(d)}</td></tr>`}).join('')+'</tbody>';
+el('product-bars').innerHTML=D.products.map(p=>bar(p.name,p.actual,25e6,'#3268a8',mi(p.actual))).join('');
+el('product-table').innerHTML='<thead><tr><th>Produto</th><th class="num">Var. receita</th><th class="num">Margem bruta</th></tr></thead><tbody>'+D.products.map(p=>`<tr><td>${p.name}</td><td class="num ${(p.actual-p.budget)<0?'negative':'positive'}">${money(p.actual-p.budget)}</td><td class="num">${p.margin.toLocaleString('pt-BR',{minimumFractionDigits:1})}%</td></tr>`).join('')+'</tbody>';
+el('quarter-chart').innerHTML=svgBars(D.quarterly.map(q=>({label:q.q,v:q.revB,a:q.revA})),15e6,v=>'R$ '+(v/1e6).toFixed(0)+' mi');
+setKpis('ops-kpis',[
+ kpi('Impacto total informado',mi(impact),'Soma aritmética dos cinco itens','negative'),
+ kpi('Maior impacto individual',mi(1.25e6),'Homologação de crédito B2B','negative'),
+ kpi('Crédito: tempo atual','48 horas','Meta informada: até 4 horas','negative'),
+ kpi('Fechamento mensal','7 dias úteis','Meta informada: 2 dias úteis','negative')
+]);
+el('impact-bars').innerHTML=D.bottlenecks.slice().sort((a,b)=>b.impact-a.impact).map(x=>bar(x.name,x.impact,1.25e6,'#c07837',mi(x.impact))).join('');
+el('ops-table').innerHTML='<thead><tr><th>Indicador</th><th>Atual</th><th>Meta</th><th>Desvio</th></tr></thead><tbody>'+D.bottlenecks.map(x=>`<tr><td>${x.name}</td><td><span class="tag">${x.actual}</span></td><td>${x.target}</td><td class="negative">${x.gap}</td></tr>`).join('')+'</tbody>';
+el('causes-table').innerHTML='<thead><tr><th>Gargalo</th><th>Área</th><th>Causa-raiz informada</th><th class="num">Impacto estimado</th></tr></thead><tbody>'+D.bottlenecks.map(x=>`<tr><td><strong>${x.name}</strong></td><td>${x.area}</td><td>${x.cause}</td><td class="num">${money(x.impact)}</td></tr>`).join('')+'</tbody>';
+function updateRecovery(){let rate=Number(el('recovery-rate').value)/100, rec=impact*rate;el('rate-label').textContent=(rate*100).toFixed(0)+'%';el('base-impact').textContent=mi(impact);el('potential').textContent=mi(rec);el('remaining').textContent=mi(impact-rec)}
+el('recovery-rate').addEventListener('input',updateRecovery);updateRecovery();
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));b.classList.add('active');el(b.dataset.tab).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}));
+</script>
+</body></html>
